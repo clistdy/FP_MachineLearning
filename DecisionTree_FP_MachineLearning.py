@@ -69,3 +69,21 @@ plt.figure(figsize=(12, 8))
 plot_tree(best_tree_entropy, feature_names=['TotalSpentScaled'], class_names=best_tree_entropy.classes_, filled=True)
 plt.title('Decision Tree for Customer Spending Categories')
 plt.show()
+
+# Data Summary
+summary = customer_spending.groupby('SpendingCategory')['TotalSpent'].describe()
+summary = summary.round(0)
+def format_currency(x):
+    return f'€{x:,.0f}'
+summary[['mean', 'std', 'min', '25%', '50%', '75%', 'max']] = summary[['mean', 'std', 'min', '25%', '50%', '75%', 'max']].applymap(format_currency)
+print(summary)
+
+conf_matrix = confusion_matrix(y_test, y_pred)
+# print("\nConfusion Matrix:\n", conf_matrix)
+
+plt.figure(figsize=(8, 6))
+sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Purples', xticklabels=dt_classifier.classes_, yticklabels=dt_classifier.classes_)
+plt.xlabel('Predicted')
+plt.ylabel('Actual')
+plt.title('Confusion Matrix')
+plt.show()
